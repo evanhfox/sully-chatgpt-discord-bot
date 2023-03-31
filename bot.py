@@ -16,7 +16,7 @@ intents = discord.Intents.default()
 intents.message_content = True
 
 # Set up your bot
-bot = commands.Bot(command_prefix="!", intents=intents)
+bot = commands.Bot(command_prefix="!", intents=intents, case_insensitive=True)
 
 # Rate limiting variables
 rate_limit_time = 10  # seconds
@@ -57,13 +57,14 @@ async def ask(ctx, *, question):
             await ctx.send("Error: Rate limiting failed. Please try again later.")
             return
 
-        prompt = f"{question}"
+        prompt = f"{question.lower()}"
         response = await query_chatgpt(prompt)
         await ctx.send(response)
     except discord.errors.HTTPException as e:
         raise ValueError("Error sending message to Discord: {}".format(str(e))) from None
     except Exception as e:
         raise ValueError("Unknown error: {}".format(str(e))) from None
+
 
 
 @bot.event
