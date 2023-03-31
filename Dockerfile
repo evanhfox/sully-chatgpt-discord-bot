@@ -1,20 +1,22 @@
-# Use the latest Alpine base image with Python
-FROM python:3-alpine
+# Set the base image to the most recent Alpine Linux
+FROM alpine:latest
+
+# Install necessary packages
+RUN apk update && \
+    apk add --no-cache python3 py3-pip
 
 # Set the working directory
 WORKDIR /app
 
-# Copy the requirements.txt file into the container
-COPY requirements.txt .
+# Copy the requirements file and install dependencies
+COPY requirements.txt /app/
+RUN pip3 install -r requirements.txt
 
-# Install the required packages
-RUN pip install --no-cache-dir -r requirements.txt
+# Copy the rest of the code
+COPY . /app/
 
-# Copy the chatgpt_discord_bot.py script into the container
-COPY chatgpt_discord_bot.py .
-
-# Run the chatgpt_discord_bot.py script when the container starts
-CMD ["python", "chatgpt_discord_bot.py"]
+# Start the bot
+CMD ["python3", "bot.py"]
 
 # Note - this discord bot requires environment variables to be set. To do this securely,
 # you need to pass the environment variables as the docker container is being ran instead of doing so 
