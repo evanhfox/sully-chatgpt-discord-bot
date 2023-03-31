@@ -51,20 +51,19 @@ async def ask(ctx, *, question):
     try:
         time_remaining = await check_rate_limit(ctx.author.id)
         if time_remaining > 0:
-            await ctx.send(f"Please wait {time_remaining:.1f} seconds before sending another request.")
+            await ctx.send(f"{ctx.author.mention}, please wait {time_remaining:.1f} seconds before sending another request.")
             return
         elif time_remaining == -1:
-            await ctx.send("Error: Rate limiting failed. Please try again later.")
+            await ctx.send(f"{ctx.author.mention}, error: Rate limiting failed. Please try again later.")
             return
 
         prompt = f"{question.lower()}"
         response = await query_chatgpt(prompt)
-        await ctx.send(response)
+        await ctx.send(f"{ctx.author.mention}, {response}")
     except discord.errors.HTTPException as e:
         raise ValueError("Error sending message to Discord: {}".format(str(e))) from None
     except Exception as e:
         raise ValueError("Unknown error: {}".format(str(e))) from None
-
 
 
 @bot.event
