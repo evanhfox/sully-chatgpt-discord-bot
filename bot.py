@@ -1,15 +1,15 @@
 import os
 import time
-import asyncio
 import openai
 import discord
 from discord.ext import commands
 
 # Set up your OpenAI API key
-openai.api_key = os.environ["OPENAI_API_KEY"]
-
-# Set up your Discord bot token
-TOKEN = os.environ["DISCORD_BOT_TOKEN"]
+try:
+    openai.api_key = os.environ["OPENAI_API_KEY"]
+    TOKEN = os.environ["DISCORD_BOT_TOKEN"]
+except KeyError as e:
+    raise ValueError("Missing environment variable: {}".format(str(e))) from None
 
 # Define the required intents
 intents = discord.Intents.default()
@@ -22,21 +22,17 @@ bot = commands.Bot(command_prefix="!", intents=intents)
 rate_limit_time = 10  # seconds
 rate_limit_dict = {}
 
+
 async def query_chatgpt(prompt):
     try:
-        response = openai.Completion.create(
-            engine="gpt-3.5-turbo",
-            prompt=prompt,
-            max_tokens=150,
-            n=1,
-            stop=None,
-            temperature=0.8,
+        completion = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=[{"role": "user", "content": prompt}]
         )
-    except openai.Error as e:
-        print(f"OpenAI error: {e}")
-        return "Error: Failed to query ChatGPT. Please try again later."
+    except openai.error.OpenAIError as e:
+        raise ValueError("Error communicating with OpenAI API: {}".format(str(e))) from None
+    return completion.choices[0].message.content
 
-    return response.choices[0].text.strip()
 
 async def check_rate_limit(user_id):
     try:
@@ -47,10 +43,10 @@ async def check_rate_limit(user_id):
         rate_limit_dict[user_id] = time.time()
         return 0
     except Exception as e:
-        print(f"Rate limiting error: {e}")
-        return -1
+        raise ValueError("Error with rate limiting logic: {}".format(str(e))) from None
 
-@bot.command(name="ask")
+
+@bot.command(name="ask", help="Ask GPT-3.5 Turbo a question or send a message")
 async def ask(ctx, *, question):
     try:
         time_remaining = await check_rate_limit(ctx.author.id)
@@ -65,11 +61,10 @@ async def ask(ctx, *, question):
         response = await query_chatgpt(prompt)
         await ctx.send(response)
     except discord.errors.HTTPException as e:
-        print(f"Discord API error: {e}")
-        await ctx.send("Error: Failed to send message. Please try again later.")
+        raise ValueError("Error sending message to Discord: {}".format(str(e))) from None
     except Exception as e:
-        print(f"Unknown error: {e}")
-        await ctx.send("Error: An unknown error occurred. Please try again later.")
+        raise ValueError("Unknown error: {}".format(str(e))) from None
+
 
 @bot.event
 async def on_ready():
