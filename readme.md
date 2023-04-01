@@ -1,4 +1,5 @@
 [![CodeQL](https://github.com/evanhfox/sully-chatgpt-discord/actions/workflows/github-code-scanning/codeql/badge.svg?branch=main)](https://github.com/evanhfox/sully-chatgpt-discord/actions/workflows/github-code-scanning/codeql)
+[![Trivy Container Scanning](https://github.com/evanhfox/sully-chatgpt-discord/actions/workflows/trivy.yml/badge.svg)](https://github.com/evanhfox/sully-chatgpt-discord/actions/workflows/trivy.yml)
 
 
 # ChatGPT Discord Bot
