@@ -14,8 +14,11 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+    - name: Docker Login
+      run: |
+        docker login -u $DOCKER_USER -p $DOCKER_TOKEN
+    
     - name: Build the Docker image
       run: |
-        echo "${{  secrets.DOCKER_TOKEN  }}" | docker login -u "${{ secrets.DOCKER_LOGIN }}" --password-stdin
-        docker image build . --file Dockerfile --tag chatgpt-discord-bot:v1
-        docker push nmethod/chatgpt-discord-bot:v1
+        docker build . --file Dockerfile --tag chatgpt-discord-bot:v1
+
