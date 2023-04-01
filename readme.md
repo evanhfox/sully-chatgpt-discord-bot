@@ -1,3 +1,6 @@
+[![CodeQL](https://github.com/evanhfox/sully-chatgpt-discord/actions/workflows/github-code-scanning/codeql/badge.svg?branch=main)](https://github.com/evanhfox/sully-chatgpt-discord/actions/workflows/github-code-scanning/codeql)
+
+
 # ChatGPT Discord Bot
 
 This Discord bot enables users to interact with OpenAI's ChatGPT within a Discord server. The bot allows users to ask questions or provide prompts, and it responds with generated content from ChatGPT.
