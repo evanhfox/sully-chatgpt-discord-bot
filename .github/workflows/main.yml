@@ -29,5 +29,6 @@ jobs:
         context: .
         push: true
         tags: |
-          ghcr.io/${{ github.repository }}:latest
-          ghcr.io/${{ github.repository }}:${{ env.CURRENT_DATE_TIME }}
+          ghcr.io/evanhfox/chatgpt-discord-bot:latest
+          ghcr.io/evanhfox/chatgpt-discord-bot:${{ env.CURRENT_DATE_TIME }}
+
