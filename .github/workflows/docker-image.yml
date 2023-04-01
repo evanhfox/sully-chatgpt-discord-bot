@@ -15,4 +15,7 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag sully-chatgpt-discord-bot:$(date +%s)
+      run: |
+        echo "{{  secrets.DOCKER_TOKEN  }} | docker login -u ${{  secrets.DOCKER_LOGIN  }} --password-stdin
+        docker build . --file Dockerfile --tag sully-chatgpt-discord-bot:$(date +%s)
+        docker push nmethod/sully-chatgpt-discord-bot
