@@ -35,5 +35,5 @@ jobs:
         context: .
         push: true
         tags: |
-          nmethod/chatgpt-discord-bot:{{date 'YYYYMMDD'}}
-          method/chatgpt-discord-bot:${{ env.CURRENT_DATE_TIME }}
+          nmethod/chatgpt-discord-bot:latest
+          nmethod/chatgpt-discord-bot:${{ env.CURRENT_DATE_TIME }}
