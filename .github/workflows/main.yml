@@ -19,9 +19,16 @@ jobs:
         username: ${{ secrets.DOCKER_LOGIN }}
         password: ${{ secrets.DOCKER_TOKEN }}
 
-    - name: Build and push Docker image
+    - name: Build and push Docker image with Latest Tag
       uses: docker/build-push-action@v2
       with:
         context: .
         push: true
         tags: nmethod/chatgpt-discord-bot:latest
+
+    - name: Build and push Docker image with Date Tag
+      uses: docker/build-push-action@v2
+      with:
+        context: .
+        push: true
+        tags: nmethod/chatgpt-discord-bot:{{date 'YYYYMMDD'}}
