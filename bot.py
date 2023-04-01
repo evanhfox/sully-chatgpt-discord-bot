@@ -4,7 +4,7 @@ import openai
 import discord
 from discord.ext import commands
 
-# Set up your OpenAI API key
+# Set up your OpenAI API key and Discord Bot Tokens
 try:
     openai.api_key = os.environ["OPENAI_API_KEY"]
     TOKEN = os.environ["DISCORD_BOT_TOKEN"]

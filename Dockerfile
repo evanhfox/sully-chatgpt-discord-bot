@@ -13,7 +13,7 @@ COPY requirements.txt /app/
 RUN pip3 install -r requirements.txt
 
 # Copy the rest of the code
-COPY . /app/
+COPY bot.py /app/
 
 # Start the bot
 CMD ["python3", "bot.py"]
