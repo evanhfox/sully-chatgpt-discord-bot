@@ -43,6 +43,16 @@ async def check_rate_limit(user_id):
         raise ValueError("Error with rate limiting logic: {}".format(str(e))) from None
 
 
+@bot.command(name="reset", help="Reset your conversation history with GPT-3.5 Turbo. To do this, use the !reset command.")
+async def reset(ctx):
+    user_id = ctx.author.id
+    if user_id in conversation_history:
+        del conversation_history[user_id]
+        await ctx.send(f"{ctx.author.mention}, your conversation history has been reset.")
+    else:
+        await ctx.send(f"{ctx.author.mention}, there is no conversation history to reset.")
+
+
 @bot.command(name="ask", help="Ask GPT-3.5 Turbo a question or send a message. To do this, use the !ask followed by your question or prompt.")
 async def ask(ctx, *, question):
     try:
