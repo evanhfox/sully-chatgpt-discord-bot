@@ -157,3 +157,7 @@ cython_debug/
 
 #Apple Spotlight Search Index Files
 .DS_Store
+
+#VSCode
+.vscode
+.vscode/
