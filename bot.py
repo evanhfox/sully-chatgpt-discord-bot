@@ -3,6 +3,7 @@ import time
 import openai
 import discord
 from discord.ext import commands
+import datetime
 
 try:
     openai.api_key = os.environ["OPENAI_API_KEY"]
@@ -73,12 +74,41 @@ async def ask(ctx, *, question):
         conversation_history[user_id].append({"role": "assistant", "content": response})
 
         # Trim conversation history if it becomes too long
-        if len(conversation_history[user_id]) > 10:
+        if len(conversation_history[user_id]) > 20:
             conversation_history[user_id] = conversation_history[user_id][-10:]
 
         await ctx.send(f"{ctx.author.mention}, {response}")
     except discord.errors.HTTPException as e:
         raise ValueError("Error sending message to Discord: {}".format(str(e))) from None
+    except Exception as e:
+        raise ValueError("Unknown error: {}".format(str(e))) from None
+
+@bot.command(name="clear", help="Delete all messages in the current channel. Only usable by members with the 'Admin' role.")
+@commands.has_role("Admin")
+async def clear(ctx):
+    try:
+        # Code to set only deletion after 14 days
+        # def is_old_message(message):
+        #     # Get the current time in UTC with timezone information
+        #     now = datetime.datetime.now(datetime.timezone.utc)
+
+        #     # Convert the message creation time to a naive datetime object
+        #     created_at_naive = message.created_at.astimezone(None)
+
+        #     # Returns True if the message is older than 14 days
+        #     return (now - created_at_naive) > datetime.timedelta(days=14)
+
+        def is_old_message(message):
+            # Always return True to delete all messages
+            return True
+
+        # Use the bulk_delete method to delete all messages in the channel
+        deleted_messages = await ctx.channel.purge(limit=None, check=is_old_message)
+
+        # Send a confirmation message to the user who executed the command
+        await ctx.send(f"{ctx.author.mention}, {len(deleted_messages)} messages in this channel have been deleted.")
+    except discord.errors.HTTPException as e:
+        raise ValueError("Error deleting messages: {}".format(str(e))) from None
     except Exception as e:
         raise ValueError("Unknown error: {}".format(str(e))) from None
 
