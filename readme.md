@@ -10,6 +10,7 @@ This Discord bot enables users to interact with OpenAI's ChatGPT within a Discor
 
 - Simple command to query ChatGPT: `!ask`
 - Rate limiting to prevent spamming ChatGPT requests
+- Maintains a basic understanding of conversations for more coherent responses.
 - Basic error handling for OpenAI API and Discord API issues
 
 ## Installation
@@ -82,8 +83,12 @@ Replace `your-discord-bot-token` and `your-openai-api-key` with your actual toke
 ## Usage
 
 To interact with the ChatGPT Discord bot, use the `!ask` command followed by your question or prompt:
-
+Example:
 !ask What is the capital of France?
+
+To clear a current conversation, a discord user can yse the `!reset` command to clear the conversation history.
+
+To cleanup the current discord channel a discord user with the role "Admin" can use the `!clear` command to clear all messages.
 
 The bot will respond with the generated content from ChatGPT.
 
