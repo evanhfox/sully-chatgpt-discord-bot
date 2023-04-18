@@ -29,7 +29,7 @@ This Discord bot enables users to interact with OpenAI's ChatGPT within a Discor
 
 2. Install the required Python packages:
 
-`pip install -r requirements.txt`
+`pip3 install -r requirements.txt`
 
 3. Set up the required environment variables:
 ```
@@ -45,7 +45,7 @@ Replace `your-discord-bot-token` and `your-openai-api-key` with your actual toke
 
 Simply run the `chatgpt_discord_bot.py` script:
 
-`python bot.py`
+`python3 bot.py`
 
 #### With Docker
 
