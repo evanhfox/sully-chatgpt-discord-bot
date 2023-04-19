@@ -35,7 +35,12 @@ jobs:
         push: false
         cache-from: type=local,src=/tmp/.buildx-cache
         cache-to: type=local,dest=/tmp/.buildx-cache
+        outputs: type=docker,dest=/tmp/container.tar
         tags: ghcr.io/${{ github.repository }}:temp
+
+    - name: Export Docker image to tar
+      run: |
+        docker save ghcr.io/${{ github.repository }}:temp -o /tmp/container.tar
 
     - name: Check for critical vulnerabilities
       id: check_vulnerabilities
@@ -49,6 +54,7 @@ jobs:
           echo "No critical vulnerabilities found, build not required."
           echo "::set-output name=build_required::false"
         fi
+
 
   docker-build-push:
     runs-on: ubuntu-latest
