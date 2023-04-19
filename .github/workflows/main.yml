@@ -6,13 +6,17 @@ on:
       - main
   schedule:
     - cron: '0 0 * * *'  # Run every night at midnight (UTC)
+  workflow_dispatch:
+    inputs:
+      previous_container_hash:
+        description: 'Hash of the previous container image'
+        required: true
 
 jobs:
   check_base_image_and_code:
     runs-on: ubuntu-latest
 
-    steps:
-    - name: Checkout repository
+    steps:\n    - name: Checkout repository
       uses: actions/checkout@v2
 
     - name: Set up Docker Buildx
@@ -50,7 +54,7 @@ jobs:
         echo "Current container hash: ${{ steps.container_hash.outputs.container_hash }}"
         echo "Previous container hash: ${{ github.event.inputs.previous_container_hash }}"
 
-        if [ "${{ steps.container_hash.outputs.container_hash }}" != "${{ github.event.inputs.previous_container_hash }}" ]; then
+        if [ \"${{ steps.container_hash.outputs.container_hash }}" != "${{ github.event.inputs.previous_container_hash }}" ]; then
           echo "Build required!"
           echo "::set-output name=build_required::true"
         else
