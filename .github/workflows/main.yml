@@ -57,10 +57,15 @@ jobs:
           name: container-tar
           path: /tmp
 
+      - name: Load Docker image
+        run: |
+          docker load --input /tmp/container.tar
+
       - name: Check for critical vulnerabilities
         id: check_vulnerabilities
         run: |
-          VULNERABILITY_FOUND=$(docker run --rm -i aquasec/trivy:latest image --severity CRITICAL --input /tmp/container.tar | grep "Total: 0")
+          IMAGE_ID=$(docker images --quiet)
+          VULNERABILITY_FOUND=$(docker run --rm -i aquasec/trivy:latest image --severity CRITICAL $IMAGE_ID | grep "Total: 0")
           if [ -z "$VULNERABILITY_FOUND" ]; then
             echo "Critical vulnerabilities found, build required!"
             echo "::set-output name=build_required::true"
@@ -68,6 +73,7 @@ jobs:
             echo "No critical vulnerabilities found, build not required."
             echo "::set-output name=build_required::false"
           fi
+
 
   docker-build-push:
     runs-on: ubuntu-latest
