@@ -64,7 +64,7 @@ jobs:
       - name: Check for critical vulnerabilities
         id: check_vulnerabilities
         run: |
-          IMAGE_ID=$(docker images --quiet)
+          IMAGE_ID=$(docker images ghcr.io/${{ github.repository }}:temp --quiet)
           VULNERABILITY_FOUND=$(docker run --rm -i aquasec/trivy:latest image --severity CRITICAL $IMAGE_ID | grep "Total: 0")
           if [ -z "$VULNERABILITY_FOUND" ]; then
             echo "Critical vulnerabilities found, build required!"
@@ -73,6 +73,7 @@ jobs:
             echo "No critical vulnerabilities found, build not required."
             echo "::set-output name=build_required::false"
           fi
+
 
 
   docker-build-push:
