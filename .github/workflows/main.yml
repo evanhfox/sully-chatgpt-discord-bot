@@ -77,7 +77,7 @@ jobs:
       - name: Set build_required output
         id: set_build_required
         run: |
-          VULNERABILITY_FOUND=$(grep -c "\"level\":\"error\"" trivy-results.sarif)
+          VULNERABILITY_FOUND=$(grep -c "\"level\":\"error\"" trivy-results.sarif || true)
           if [ $VULNERABILITY_FOUND -gt 0 ]; then
             echo "Critical vulnerabilities found, build required!"
             echo "::set-output name=build_required::true"
@@ -85,7 +85,6 @@ jobs:
             echo "No critical vulnerabilities found, build not required."
             echo "::set-output name=build_required::false"
           fi
-
 
   docker-build-push:
     runs-on: ubuntu-latest
