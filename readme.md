@@ -70,9 +70,9 @@ Replace `your-discord-bot-token` and `your-openai-api-key` with your actual toke
 
 4. Under the "Token" section, click "Copy" to copy your bot's token. This is the `DISCORD_BOT_TOKEN` you'll use in the environment variable.
 
-5. Go to the "OAuth2" tab on the left side menu, scroll down to the "Scopes" section, and select the "bot" scope.
+5. Go to the "OAuth2" tab on the left side menu, scroll down to the "Authorization Method" and select "In-App Authorization". From the now visible "Scopes" section select "bot" scope.
 
-6. In the "Bot Permissions" section, select the following permissions: "Send Messages" and "Read Message Content".
+6. In the "Bot Permissions" section, select the following permissions: "Send Messages", "Manage Messages" and "Read Message Content".
 
 7. After selecting the appropriate permissions, a URL will be generated in the "Scopes" section. Copy this URL and paste it into your browser.
 
