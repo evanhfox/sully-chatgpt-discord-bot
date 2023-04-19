@@ -77,7 +77,10 @@ jobs:
         continue-on-error: true
 
       - name: Display Trivy scan results
-        run: cat trivy-results.sarif
+        if: always()
+        run: |
+          echo "=== Trivy Scan Results ==="
+          cat trivy-results.sarif
 
       - name: Set build_required output
         id: set_build_required
