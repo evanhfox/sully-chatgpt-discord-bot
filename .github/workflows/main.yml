@@ -108,6 +108,10 @@ jobs:
     if: ${{ needs.build_and_check_vulnerabilities.result == 'success' && needs.build_and_check_vulnerabilities.outputs.build_required == 'true' }}
 
     steps:
+      - name: Output build_required value
+        run: |
+          echo "build_required value: ${{ steps.set_build_required.outputs.build_required }}"
+
       - name: Checkout repository
         uses: actions/checkout@v2
 
