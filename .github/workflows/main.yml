@@ -108,6 +108,9 @@ jobs:
     if: needs.build_and_check_vulnerabilities.outputs.build_required != 'false'
  
     steps:
+      - name: Print build_required value
+        run: echo "build_required value: ${{ needs.build_and_check_vulnerabilities.outputs.build_required }}"
+
       - name: Checkout repository
         uses: actions/checkout@v2
         
