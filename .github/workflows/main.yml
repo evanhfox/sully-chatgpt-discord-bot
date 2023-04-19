@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
 
     outputs:
-      build_required: ${{ steps.check_build_required.outputs.build_required }}
+      build_required: ${{ steps.check_container_hash.outputs.container_hash }}
 
     steps:
     - name: Checkout repository
@@ -48,7 +48,7 @@ jobs:
         echo "::set-output name=container_hash::$CONTAINER_HASH"
 
     - name: Check if the container hash is different
-      id: check_build_required
+      id: check_container_hash
       run: |
         echo "Current container hash: ${{ steps.container_hash.outputs.container_hash }}"
         echo "Previous container hash: ${{ github.event.inputs.previous_container_hash }}"
@@ -80,11 +80,15 @@ jobs:
       - name: Set current date and time as an environment variable
         run: echo "CURRENT_DATE_TIME=$(date +'%Y-%m-%dT%H-%M-%S')" >> $GITHUB_ENV
 
-      - name: Build and push Docker image
+      - name: Set current date and time as an environment variable
+        run: echo "CURRENT_DATE_TIME=$(date +'%Y-%m-%dT%H-%M-%S')" >> $GITHUB_ENV\n\n- name: Build and push Docker image
         uses: docker/build-push-action@v2
         with:
           context: .
           push: true
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache
+          outputs: type=docker,dest=/tmp/container.tar
           tags: |
-            ghcr.io/${{ github.repository }}:latest
             ghcr.io/${{ github.repository }}:${{ env.CURRENT_DATE_TIME }}
+            ghcr.io/${{ github.repository }}:latest
