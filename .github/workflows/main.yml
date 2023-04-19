@@ -63,18 +63,16 @@ jobs:
 
       - name: Check for critical vulnerabilities
         id: check_vulnerabilities
-        run: |
-          IMAGE_ID=$(docker images ghcr.io/${{ github.repository }}:temp --quiet)
-          VULNERABILITY_FOUND=$(docker run --rm -i aquasec/trivy:latest image --severity CRITICAL $IMAGE_ID | grep "Total: 0")
-          if [ -z "$VULNERABILITY_FOUND" ]; then
-            echo "Critical vulnerabilities found, build required!"
-            echo "::set-output name=build_required::true"
-          else
-            echo "No critical vulnerabilities found, build not required."
-            echo "::set-output name=build_required::false"
-          fi
-
-
+        uses: aquasec/trivy-action@master
+        with:
+          image-ref: 'ghcr.io/${{ github.repository }}:temp'
+          exit-code: '0'
+          severity: 'CRITICAL'
+          ignore-unfixed: 'true'
+          format: 'template'
+          template: '@/contrib/sarif.tpl'
+          output: 'trivy-results.sarif'
+        continue-on-error: true
 
   docker-build-push:
     runs-on: ubuntu-latest
