@@ -87,7 +87,7 @@ jobs:
           fi
 
 
-  docker-build-push:
+  docker_build_push:
     runs-on: ubuntu-latest
     needs: build_and_check_vulnerabilities
     if: needs.build_and_check_vulnerabilities.outputs.build_required == 'true'
