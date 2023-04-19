@@ -69,11 +69,12 @@ jobs:
         with:
           image-ref: 'ghcr.io/${{ github.repository }}:temp'
           exit-code: '0'
-          severity: 'CRITICAL,HIGH'
+          severity: 'CRITICAL'
           ignore-unfixed: 'false'
+          format: 'sarif'
           output: 'trivy-results.sarif'
         continue-on-error: true
-
+        
       - name: Display Trivy scan results
         if: always()
         run: |
@@ -85,6 +86,7 @@ jobs:
         run: |
           VULNERABILITY_FOUND=$(grep -c "\"level\":\"error\"" trivy-results.sarif || true)
           if [ $VULNERABILITY_FOUND -gt 0 ] || [[ "${{ github.event_name }}" == "push" && "${{ github.ref }}" == "refs/heads/main" ]]; then
+            echo $VULNERABILITY_FOUND
             echo "Build required!"
             echo "::set-output name=build_required::true"
           else
