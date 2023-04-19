@@ -11,9 +11,6 @@ jobs:
   check_base_image_and_code:
     runs-on: ubuntu-latest
 
-    outputs:
-      build_required: ${{ steps.check_build_required.outputs.build_required }}
-
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
@@ -48,7 +45,7 @@ jobs:
         echo "::set-output name=container_hash::$CONTAINER_HASH"
 
     - name: Check if the container hash is different
-      id: check_build_required
+      id: check_container_hash
       run: |
         echo "Current container hash: ${{ steps.container_hash.outputs.container_hash }}"
         echo "Previous container hash: ${{ github.event.inputs.previous_container_hash }}"
@@ -60,16 +57,15 @@ jobs:
           echo "No build required, aborting."
           echo "::set-output name=build_required::false"
         fi
+      outputs:
+        build_required: ${{ steps.check_container_hash.outputs.build_required }}
 
   docker-build-push:
     runs-on: ubuntu-latest
     needs: check_base_image_and_code
-    if: needs.check_base_image_and_code.outputs.build_required == 'true'
+    if: needs.check_base_image_and_code.outputs.build_required == true
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v1
         with:
@@ -85,6 +81,9 @@ jobs:
         with:
           context: .
           push: true
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache
+          outputs: type=docker,dest=/tmp/container.tar
           tags: |
-            ghcr.io/${{ github.repository }}:latest
             ghcr.io/${{ github.repository }}:${{ env.CURRENT_DATE_TIME }}
+            ghcr.io/${{ github.repository }}:latest
