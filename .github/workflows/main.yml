@@ -41,8 +41,7 @@ jobs:
     - name: Check for critical vulnerabilities
       id: check_vulnerabilities
       run: |
-        docker load --input /tmp/container.tar
-        VULNERABILITY_FOUND=$(docker run --rm -i aquasec/trivy:latest image --severity CRITICAL ghcr.io/${{ github.repository }}:temp | grep "Total: 0")
+        VULNERABILITY_FOUND=$(docker run --rm -i aquasec/trivy:latest image --severity CRITICAL --input /tmp/container.tar | grep "Total: 0")
         if [ -z "$VULNERABILITY_FOUND" ]; then
           echo "Critical vulnerabilities found, build required!"
           echo "::set-output name=build_required::true"
