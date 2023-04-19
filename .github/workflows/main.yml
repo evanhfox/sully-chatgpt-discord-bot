@@ -91,37 +91,32 @@ jobs:
         run: |
           VULNERABILITY_FOUND=$(grep -c "\"level\":\"error\"" trivy-results.sarif || true)
           if [ $VULNERABILITY_FOUND -gt 0 ] || [[ "${{ github.event_name }}" == "push" && "${{ github.ref }}" == "refs/heads/main" ]]; then
-            echo $VULNERABILITY_FOUND " Critical Vulnerabilities Found!"
-            echo "Build required!"
-            echo "::set-output name=build_required::true"
+            echo "Vulnerability found, build required."
+            echo "true" > /tmp/build_required
           else
             echo "No critical vulnerabilities found and not a push to main, build not required."
-            echo "::set-output name=build_required::false"
+            echo "false" > /tmp/build_required
           fi
-      - name: Output build_required value
-        run: |
-          echo "build_required value: ${{ steps.set_build_required.outputs.build_required }}"
 
   docker_build_push:
     runs-on: ubuntu-latest
     needs: build_and_check_vulnerabilities
-    if: ${{ needs.build_and_check_vulnerabilities.outputs.build_required == 'true' }}
+    if: env.BUILD_REQUIRED == 'true'
+    env:
+      IMAGE_TAG: ${{ github.repository }}:${{ env.CURRENT_DATE_TIME }}
+      LATEST_TAG: ${{ github.repository }}:latest
 
     steps:
-      - name: Output build_required value
-        run: |
-          echo "build_required value: ${{ steps.set_build_required.outputs.build_required }}"
-
       - name: Checkout repository
         uses: actions/checkout@v2
-
+        
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v1
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-
+        
       - name: Set current date and time as an environment variable
         run: echo "CURRENT_DATE_TIME=$(date +'%Y-%m-%dT%H-%M-%S')" >> $GITHUB_ENV
 
@@ -131,5 +126,6 @@ jobs:
           context: .
           push: true
           tags: |
-            ghcr.io/${{ github.repository }}:${{ env.CURRENT_DATE_TIME }}
-            ghcr.io/${{ github.repository }}:latest
+            ghcr.io/${{ env.IMAGE_TAG }}
+            ghcr.io/${{ env.LATEST_TAG }}
+
