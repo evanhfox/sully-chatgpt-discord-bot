@@ -98,13 +98,15 @@ jobs:
             echo "No critical vulnerabilities found and not a push to main, build not required."
             echo "::set-output name=build_required::false"
           fi
-
+      - name: Output build_required value
+        run: |
+          echo "build_required value: ${{ steps.set_build_required.outputs.build_required }}"
 
   docker_build_push:
     runs-on: ubuntu-latest
     needs: build_and_check_vulnerabilities
-    if: needs.build_and_check_vulnerabilities.outputs.build_required == 'true'
-  
+    if: needs.build_and_check_vulnerabilities.outputs.build_required != 'false'
+ 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
