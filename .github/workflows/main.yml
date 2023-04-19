@@ -90,8 +90,7 @@ jobs:
   docker_build_push:
     runs-on: ubuntu-latest
     needs: build_and_check_vulnerabilities
-    if: needs.build_and_check_vulnerabilities.outputs.build_required == 'true'
-
+    if: fromJson(needs.build_and_check_vulnerabilities.outputs.build_required)
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
