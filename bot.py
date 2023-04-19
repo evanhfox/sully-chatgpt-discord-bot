@@ -74,7 +74,7 @@ async def ask(ctx, *, question):
         conversation_history[user_id].append({"role": "assistant", "content": response})
 
         # Trim conversation history if it becomes too long
-        if len(conversation_history[user_id]) > 20:
+        if len(conversation_history[user_id]) > 25:
             conversation_history[user_id] = conversation_history[user_id][-10:]
 
         await ctx.send(f"{ctx.author.mention}, {response}")
