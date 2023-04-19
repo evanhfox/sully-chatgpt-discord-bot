@@ -16,7 +16,7 @@ jobs:
   check_base_image_and_code:
     runs-on: ubuntu-latest
 
-    steps:\n    - name: Checkout repository
+    steps:    - name: Checkout repository
       uses: actions/checkout@v2
 
     - name: Set up Docker Buildx
