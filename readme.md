@@ -87,6 +87,9 @@ Replace `your-discord-bot-token` and `your-openai-api-key` with your actual toke
 To interact with the ChatGPT Discord bot, use the `!ask` command followed by your question or prompt:
 Example:
 !ask What is the capital of France?
+<ChatGPT Response>
+!ask Are you sure about that?
+<Further ChatGPT Response>
 
 To clear a current conversation, a discord user can yse the `!reset` command to clear the conversation history.
 
