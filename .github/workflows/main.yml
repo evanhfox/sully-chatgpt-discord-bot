@@ -9,53 +9,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  build_and_check_vulnerabilities:
+  build_image:
     runs-on: ubuntu-latest
-
-    steps:    
-    - name: Checkout repository
-      uses: actions/checkout@v2
-
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v1
-
-    - name: Cache Docker layers
-      uses: actions/cache@v2
-      with:
-        path: /tmp/.buildx-cache
-        key: ${{ runner.os }}-buildx-${{ github.sha }}
-        restore-keys: |
-          ${{ runner.os }}-buildx-
-
-    - name: Build Docker image
-      id: docker_build
-      uses: docker/build-push-action@v2
-      with:
-        context: .
-        push: false
-        cache-from: type=local,src=/tmp/.buildx-cache
-        cache-to: type=local,dest=/tmp/.buildx-cache
-        outputs: type=docker,dest=/tmp/container.tar
-        tags: ghcr.io/${{ github.repository }}:temp
-
-    - name: Check for critical vulnerabilities
-      id: check_vulnerabilities
-      run: |
-        VULNERABILITY_FOUND=$(docker run --rm -i aquasec/trivy:latest image --severity CRITICAL --input /tmp/container.tar | grep "Total: 0")
-        if [ -z "$VULNERABILITY_FOUND" ]; then
-          echo "Critical vulnerabilities found, build required!"
-          echo "::set-output name=build_required::true"
-        else
-          echo "No critical vulnerabilities found, build not required."
-          echo "::set-output name=build_required::false"
-        fi
-
-
-  docker-build-push:
-    runs-on: ubuntu-latest
-    needs: build_and_check_vulnerabilities
-    if: needs.build_and_check_vulnerabilities.outputs.build_required == 'true'
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -70,6 +25,58 @@ jobs:
           key: ${{ runner.os }}-buildx-${{ github.sha }}
           restore-keys: |
             ${{ runner.os }}-buildx-
+
+      - name: Build Docker image
+        id: docker_build
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          push: false
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache
+          outputs: type=docker,dest=/tmp/container.tar
+          tags: ghcr.io/${{ github.repository }}:temp
+
+      - name: Upload container tar
+        uses: actions/upload-artifact@v2
+        with:
+          name: container-tar
+          path: /tmp/container.tar
+
+  build_and_check_vulnerabilities:
+    runs-on: ubuntu-latest
+    needs: build_image
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Download container tar
+        uses: actions/download-artifact@v2
+        with:
+          name: container-tar
+          path: /tmp
+
+      - name: Check for critical vulnerabilities
+        id: check_vulnerabilities
+        run: |
+          VULNERABILITY_FOUND=$(docker run --rm -i aquasec/trivy:latest image --severity CRITICAL --input /tmp/container.tar | grep "Total: 0")
+          if [ -z "$VULNERABILITY_FOUND" ]; then
+            echo "Critical vulnerabilities found, build required!"
+            echo "::set-output name=build_required::true"
+          else
+            echo "No critical vulnerabilities found, build not required."
+            echo "::set-output name=build_required::false"
+          fi
+
+  docker-build-push:
+    runs-on: ubuntu-latest
+    needs: build_and_check_vulnerabilities
+    if: needs.build_and_check_vulnerabilities.outputs.build_required == 'true'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v1
