@@ -38,10 +38,6 @@ jobs:
         outputs: type=docker,dest=/tmp/container.tar
         tags: ghcr.io/${{ github.repository }}:temp
 
-    - name: Export Docker image to tar
-      run: |
-        docker save ghcr.io/${{ github.repository }}:temp -o /tmp/container.tar
-
     - name: Check for critical vulnerabilities
       id: check_vulnerabilities
       run: |
