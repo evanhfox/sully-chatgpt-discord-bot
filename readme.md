@@ -10,6 +10,7 @@ This Discord bot enables users to interact with OpenAI's ChatGPT within a Discor
 
 - Simple command to query ChatGPT: `!ask`
 - Rate limiting to prevent spamming ChatGPT requests
+- Maintains a basic understanding of conversations for more coherent responses.
 - Basic error handling for OpenAI API and Discord API issues
 
 ## Installation
@@ -29,7 +30,7 @@ This Discord bot enables users to interact with OpenAI's ChatGPT within a Discor
 
 2. Install the required Python packages:
 
-`pip install -r requirements.txt`
+`pip3 install -r requirements.txt`
 
 3. Set up the required environment variables:
 ```
@@ -45,7 +46,7 @@ Replace `your-discord-bot-token` and `your-openai-api-key` with your actual toke
 
 Simply run the `chatgpt_discord_bot.py` script:
 
-`python bot.py`
+`python3 bot.py`
 
 #### With Docker
 
@@ -69,9 +70,9 @@ Replace `your-discord-bot-token` and `your-openai-api-key` with your actual toke
 
 4. Under the "Token" section, click "Copy" to copy your bot's token. This is the `DISCORD_BOT_TOKEN` you'll use in the environment variable.
 
-5. Go to the "OAuth2" tab on the left side menu, scroll down to the "Scopes" section, and select the "bot" scope.
+5. Go to the "OAuth2" tab on the left side menu, scroll down to the "Authorization Method" and select "In-App Authorization". From the now visible "Scopes" section select "bot" scope.
 
-6. In the "Bot Permissions" section, select the following permissions: "Send Messages" and "Read Message Content".
+6. In the "Bot Permissions" section, select the following permissions: "Send Messages", "Manage Messages" and "Read Message Content".
 
 7. After selecting the appropriate permissions, a URL will be generated in the "Scopes" section. Copy this URL and paste it into your browser.
 
@@ -82,8 +83,12 @@ Replace `your-discord-bot-token` and `your-openai-api-key` with your actual toke
 ## Usage
 
 To interact with the ChatGPT Discord bot, use the `!ask` command followed by your question or prompt:
-
+Example:
 !ask What is the capital of France?
+
+To clear a current conversation, a discord user can yse the `!reset` command to clear the conversation history.
+
+To cleanup the current discord channel a discord user with the role "Admin" can use the `!clear` command to clear all messages.
 
 The bot will respond with the generated content from ChatGPT.
 
