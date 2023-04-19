@@ -50,6 +50,8 @@ Simply run the `chatgpt_discord_bot.py` script:
 
 #### With Docker
 
+Note: [A Docker image based on Apline is available for public use here.](https://github.com/evanhfox/sully-chatgpt-discord/pkgs/container/sully-chatgpt-discord/86517351?tag=latest) This docker image is updated with all new stable builds and is also re-built if any critical vulnerabilities are detected on a daily basis.
+
 1. Build the Docker image:
 
 `docker build -t chatgpt-discord-bot .`
