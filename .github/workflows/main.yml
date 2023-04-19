@@ -69,10 +69,8 @@ jobs:
         with:
           image-ref: 'ghcr.io/${{ github.repository }}:temp'
           exit-code: '0'
-          severity: 'CRITICAL'
-          ignore-unfixed: 'true'
-          format: 'template'
-          template: '@/contrib/sarif.tpl'
+          severity: 'CRITICAL,HIGH'
+          ignore-unfixed: 'false'
           output: 'trivy-results.sarif'
         continue-on-error: true
 
