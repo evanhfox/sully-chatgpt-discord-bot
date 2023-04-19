@@ -78,11 +78,11 @@ jobs:
         id: set_build_required
         run: |
           VULNERABILITY_FOUND=$(grep -c "\"level\":\"error\"" trivy-results.sarif || true)
-          if [ $VULNERABILITY_FOUND -gt 0 ]; then
-            echo "Critical vulnerabilities found, build required!"
+          if [ $VULNERABILITY_FOUND -gt 0 ] || [ "${{ github.event_name }}" == "push" ]; then
+            echo "Build required!"
             echo "::set-output name=build_required::true"
           else
-            echo "No critical vulnerabilities found, build not required."
+            echo "No critical vulnerabilities found and not a push to main, build not required."
             echo "::set-output name=build_required::false"
           fi
 
