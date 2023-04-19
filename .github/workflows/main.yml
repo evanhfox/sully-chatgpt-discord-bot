@@ -57,8 +57,6 @@ jobs:
           echo "No build required, aborting."
           echo "::set-output name=build_required::false"
         fi
-      outputs:
-        build_required: ${{ steps.check_container_hash.outputs.build_required }}
 
   docker-build-push:
     runs-on: ubuntu-latest
