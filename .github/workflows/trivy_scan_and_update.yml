@@ -6,7 +6,8 @@ on:
   push:
     branches:
       - main
-
+  workflow_dispatch:
+  
 jobs:
   trivy_scan_and_update:
     runs-on: ubuntu-latest
