@@ -92,11 +92,14 @@ jobs:
           VULNERABILITY_FOUND=$(grep -c "\"level\":\"error\"" trivy-results.sarif || true)
           if [ $VULNERABILITY_FOUND -gt 0 ] || [[ "${{ github.event_name }}" == "push" && "${{ github.ref }}" == "refs/heads/main" ]]; then
             echo "Vulnerability found, build required."
-            echo "true" > /tmp/build_required
+            echo "build_required=true" >> $GITHUB_ENV
           else
             echo "No critical vulnerabilities found and not a push to main, build not required."
-            echo "false" > /tmp/build_required
+            echo "build_required=false" >> $GITHUB_ENV
           fi
+        outputs:
+          build_required: ${{ env.build_required }}
+
 
   docker_build_push:
     runs-on: ubuntu-latest
