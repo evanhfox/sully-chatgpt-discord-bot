@@ -25,7 +25,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Pull latest image
-        run: docker pull ghcr.io/${{ github.repository }}/your_image_name:latest || true
+        run: docker pull ghcr.io/${{ github.repository }}/sully-chatgpt-discord:latest || true
 
       - name: Build and push updated image
         uses: docker/build-push-action@v2
@@ -42,7 +42,7 @@ jobs:
 
       - name: Scan image for vulnerabilities
         run: |
-          trivy image --severity HIGH,CRITICAL --exit-code 1 ghcr.io/${{ github.repository }}/your_image_name:latest
+          trivy image --severity HIGH,CRITICAL --exit-code 1 ghcr.io/${{ github.repository }}/sully-chatgpt-discord:latest
           EXITCODE=$?
           echo "EXITCODE=$EXITCODE" >> $GITHUB_ENV
           if [ $EXITCODE -ne 0 ]; then
