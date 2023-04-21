@@ -26,12 +26,12 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Pull latest image
-        run: docker pull ghcr.io/${{ github.actor }}/sully-chatgpt-discord:latest || true
+        run: docker pull ghcr.io/${{ github.repository }}:latest || true
 
       - name: Scan image for vulnerabilities
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: ghcr.io/${{ github.actor }}/sully-chatgpt-discord:latest
+          image-ref: ghcr.io/${{ github.repository }}:latest
           exit-code: 1
           severity: 'HIGH,CRITICAL'
           ignore-unfixed: true
@@ -54,4 +54,4 @@ jobs:
         with:
           context: .
           push: true
-          tags: ghcr.io/${{ github.actor }}/sully-chatgpt-discord:latest
+          tags: ghcr.io/${{ github.repository }}:latest
