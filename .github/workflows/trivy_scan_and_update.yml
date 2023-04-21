@@ -1,4 +1,4 @@
-name: Trivy Scan and Update
+name: Vulnerability Scan and Container Build
 
 on:
   schedule:
