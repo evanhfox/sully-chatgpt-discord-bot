@@ -2,10 +2,10 @@
 [![Container Build Status](https://github.com/evanhfox/sully-chatgpt-discord/actions/workflows/trivy_scan_and_update.yml/badge.svg)](https://github.com/evanhfox/sully-chatgpt-discord/actions/workflows/trivy_scan_and_update.yml)
 
 <p align="center">
-  <img width="460" height="300" src="sully.png">
+  <img width="460" height="300" src="sully-gpt.png">
 </p>
 
-# ChatGPT Discord Bot
+# Sully's ChatGPT Discord Bot
 
 This Discord bot enables users to interact with OpenAI's ChatGPT within a Discord server. The bot allows users to ask questions or provide prompts, and it responds with generated content from ChatGPT.
 
