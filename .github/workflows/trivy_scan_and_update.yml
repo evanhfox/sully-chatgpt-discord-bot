@@ -44,4 +44,4 @@ jobs:
         with:
           context: .
           push: true
-          tags: ghcr.io/sully-chatgpt-discord:latest
+          tags: ghcr.io/${{ github.actor }}/sully-chatgpt-discord:latest
