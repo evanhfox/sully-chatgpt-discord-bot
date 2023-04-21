@@ -25,29 +25,23 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Pull latest image
-        run: docker pull ghcr.io/${{ github.repository }}/sully-chatgpt-discord:latest || true
-
-      - name: Download and setup Trivy
-        run: |
-          wget https://github.com/aquasecurity/trivy/releases/latest/download/trivy_$(uname -s)_$(uname -m).tar.gz
-          tar zxvf trivy_$(uname -s)_$(uname -m).tar.gz
-          sudo mv trivy /usr/local/bin/
+        run: docker pull ghcr.io/${{ github.actor }}/sully-chatgpt-discord:latest || true
 
       - name: Scan image for vulnerabilities
-        run: |
-          trivy image --severity HIGH,CRITICAL --exit-code 1 ghcr.io/${{ github.repository }}/sully-chatgpt-discord:latest
-          EXITCODE=$?
-          echo "EXITCODE=$EXITCODE" >> $GITHUB_ENV
-          if [ $EXITCODE -ne 0 ]; then
-            echo "A high or critical vulnerability was found."
-          else
-            echo "No high or critical vulnerabilities were found."
-          fi
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: ghcr.io/${{ github.actor }}/sully-chatgpt-discord:latest
+          exit-code: 1
+          severity: 'HIGH,CRITICAL'
+          ignore-unfixed: true
+      - name: Set vulnerability flag
+        if: ${{ failure() }}
+        run: echo "VULNERABILITY_FOUND=true" >> $GITHUB_ENV
 
       - name: Build and push updated image
-        if: github.event_name == 'push' || env.EXITCODE != 0
+        if: github.event_name == 'push' || env.VULNERABILITY_FOUND == 'true'
         uses: docker/build-push-action@v2
         with:
           context: .
           push: true
-          tags: ghcr.io/${{ github.repository }}/sully-chatgpt-discord:latest
+          tags: ghcr.io/sully-chatgpt-discord:latest
