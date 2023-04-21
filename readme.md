@@ -5,7 +5,7 @@
   <img width="460" height="300" src="sully-gpt.png">
 </p>
 
-# ChatGPT Discord Bot
+# Sully's ChatGPT Discord Bot
 
 This Discord bot enables users to interact with OpenAI's ChatGPT within a Discord server. The bot allows users to ask questions or provide prompts, and it responds with generated content from ChatGPT.
 
