@@ -2,7 +2,7 @@ name: Trivy Scan and Update
 
 on:
   schedule:
-    - cron: '0 23 * * *' # Run at 11:00 PM every night
+    - cron: '17 1 * * *' # Run at 11:00 PM every night
   push:
     branches:
       - main
