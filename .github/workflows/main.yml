@@ -99,8 +99,8 @@ jobs:
           fi
 
       - name: Debug build_required value
-          run: |
-            echo "build_required: ${{ steps.set_build_required.outputs.build_required }}"
+        run: |
+          echo "build_required: ${{ steps.set_build_required.outputs.build_required }}"
 
   docker_build_push:
     runs-on: ubuntu-latest
