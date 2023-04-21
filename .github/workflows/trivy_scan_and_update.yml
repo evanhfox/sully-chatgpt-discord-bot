@@ -27,13 +27,6 @@ jobs:
       - name: Pull latest image
         run: docker pull ghcr.io/${{ github.repository }}/sully-chatgpt-discord:latest || true
 
-      - name: Build and push updated image
-        uses: docker/build-push-action@v2
-        with:
-          context: .
-          push: true
-          tags: ghcr.io/${{ github.repository }}/sully-chatgpt-discord:latest
-
       - name: Download and setup Trivy
         run: |
           wget https://github.com/aquasecurity/trivy/releases/latest/download/trivy_$(uname -s)_$(uname -m).tar.gz
@@ -51,8 +44,10 @@ jobs:
             echo "No high or critical vulnerabilities were found."
           fi
 
-      - name: Push updated image if vulnerabilities found
-        if: ${{ env.EXITCODE != 0 }}
-        run: |
-          echo "Pushing updated image due to detected vulnerabilities."
-          docker push ghcr.io/${{ github.repository }}/sully-chatgpt-discord:latest
+      - name: Build and push updated image
+        if: github.event_name == 'push' || env.EXITCODE != 0
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          push: true
+          tags: ghcr.io/${{ github.repository }}/sully-chatgpt-discord:latest
