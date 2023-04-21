@@ -1,6 +1,9 @@
 [![CodeQL Scanning](https://github.com/evanhfox/sully-chatgpt-discord/actions/workflows/github-code-scanning/codeql/badge.svg?branch=main)](https://github.com/evanhfox/sully-chatgpt-discord/actions/workflows/github-code-scanning/codeql)
-[![Trivy Container Scanning](https://github.com/evanhfox/sully-chatgpt-discord/actions/workflows/trivy.yml/badge.svg)](https://github.com/evanhfox/sully-chatgpt-discord/actions/workflows/trivy.yml)
 [![Container Build Status](https://github.com/evanhfox/sully-chatgpt-discord/actions/workflows/trivy_scan_and_update.yml/badge.svg)](https://github.com/evanhfox/sully-chatgpt-discord/actions/workflows/trivy_scan_and_update.yml)
+
+<p align="center">
+  <img width="460" height="300" src="sully.png">
+</p>
 
 # ChatGPT Discord Bot
 
