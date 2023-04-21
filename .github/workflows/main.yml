@@ -126,4 +126,4 @@ jobs:
           push: true
           tags: |
             ghcr.io/${{ github.repository }}:${{ env.CURRENT_DATE_TIME }}
-            ghcr.io/${{ env.L
+            ghcr.io/${{ env.LATEST_TAG }}
