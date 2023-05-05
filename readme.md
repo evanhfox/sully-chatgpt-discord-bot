@@ -2,7 +2,7 @@
 [![Container Build Status](https://github.com/evanhfox/sully-chatgpt-discord/actions/workflows/trivy_scan_and_update.yml/badge.svg)](https://github.com/evanhfox/sully-chatgpt-discord/actions/workflows/trivy_scan_and_update.yml)
 
 <p align="center">
-  <img width="460" height="300" src="sully-gpt.png">
+  <img width="200" height="200" src="sully-gpt.png">
 </p>
 
 # Sully's ChatGPT Discord Bot
