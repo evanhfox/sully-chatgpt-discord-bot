@@ -24,7 +24,7 @@ conversation_history = {}
 async def query_chatgpt(messages):
     try:
         completion = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
+            model="gpt-4",
             messages=messages
         )
     except openai.error.OpenAIError as e:
