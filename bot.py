@@ -54,7 +54,7 @@ async def reset(ctx):
         await ctx.send(f"{ctx.author.mention}, there is no conversation history to reset.")
 
 
-@bot.command(name="ask", help="Ask GPT-3.5 Turbo a question or send a message. To do this, use the !ask followed by your question or prompt.")
+@bot.command(name="ask", help="Ask ChatGPT-4 a question or send a message. To do this, use the !ask followed by your question or prompt.")
 async def ask(ctx, *, question):
     try:
         user_id = ctx.author.id
