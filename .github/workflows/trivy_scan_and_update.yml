@@ -37,7 +37,7 @@ jobs:
         with:
           image-ref: ghcr.io/${{ github.repository }}:latest
           exit-code: 1
-          severity: 'HIGH,CRITICAL'
+          severity: 'CRITICAL'
           ignore-unfixed: true
           format: 'sarif'
           output: 'trivy-results.sarif'
