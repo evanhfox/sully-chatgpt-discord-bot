@@ -1,8 +1,11 @@
-name: Nightly Vulnerability Scan
+name: Trivy Vulnerability Scan
 
 on:
-  schedule:
-    - cron: '0 1 * * *' # Run daily an hour after the build
+  workflow_dispatch:
+  workflow_run:
+    workflows: ["Docker Build"]
+    types: 
+      - completed
 
 jobs:
   trivy_scan:
@@ -14,7 +17,7 @@ jobs:
       - name: Scan Docker Image for Vulnerabilities
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: ghcr.io/${{ github.repository }}:nightly
+          image-ref: ghcr.io/${{ github.repository }}:${{ github.event.workflow_run.run_number }}
           severity: 'CRITICAL,HIGH'
           ignore-unfixed: true
           format: 'sarif'
