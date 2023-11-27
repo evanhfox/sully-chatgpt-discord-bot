@@ -1,0 +1,42 @@
+name: Cleanup Docker Images
+
+on:
+  schedule:
+    - cron: '0 0 * * 0' # Run weekly, e.g., every Sunday at midnight
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Run cleanup script
+        env:
+          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPOSITORY: ${{ github.repository }}
+        run: |
+          #!/bin/bash
+          # Define the number of most recent tags to keep
+          KEEP_TAGS=10
+
+          # Fetch tags from GHCR
+          TAGS=$(curl -s -H "Authorization: Bearer $GHCR_TOKEN" \
+          "https://ghcr.io/v2/${REPOSITORY}/tags/list" | jq -r '.tags[]')
+
+          # Sort and skip the most recent $KEEP_TAGS
+          DELETE_TAGS=$(echo "$TAGS" | grep -v latest | sort -r | tail -n +$((KEEP_TAGS + 1)))
+
+          # Loop over tags and delete them
+          for TAG in $DELETE_TAGS; do
+            echo "Deleting tag: $TAG"
+            curl -X DELETE -H "Authorization: Bearer $GHCR_TOKEN" \
+            "https://ghcr.io/v2/${REPOSITORY}/manifests/$TAG"
+          done
