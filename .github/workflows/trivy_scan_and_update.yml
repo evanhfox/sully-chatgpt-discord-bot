@@ -1,15 +1,15 @@
 name: Vulnerability Scan and Container Build
 
 on:
-  schedule:
-    - cron: '0 * * * *' # Run Hourly
   push:
     branches:
       - main
+  schedule:
+    - cron: '0 * * * *' # Run Hourly
   workflow_dispatch:
 
 jobs:
-  trivy_scan_and_update:
+  build_and_scan:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -25,10 +25,14 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Pull latest image
-        run: docker pull ghcr.io/${{ github.repository }}:latest || true
+      - name: Build and push image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: ghcr.io/${{ github.repository }}:latest
 
-      - name: Scan image for vulnerabilities
+      - name: Scan built image for vulnerabilities
         uses: aquasecurity/trivy-action@master
         with:
           image-ref: ghcr.io/${{ github.repository }}:latest
@@ -37,21 +41,8 @@ jobs:
           ignore-unfixed: true
           format: 'sarif'
           output: 'trivy-results.sarif'
-      
+
       - name: Upload Trivy scan results to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v2
         with:
           sarif_file: 'trivy-results.sarif'
-
-
-      - name: Set vulnerability flag
-        if: ${{ failure() }}
-        run: echo "VULNERABILITY_FOUND=true" >> $GITHUB_ENV
-
-      - name: Build and push updated image
-        if: github.event_name == 'push' || env.VULNERABILITY_FOUND == 'true'
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          push: true
-          tags: ghcr.io/${{ github.repository }}:latest
