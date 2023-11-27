@@ -26,11 +26,21 @@ jobs:
         run: |
           #!/bin/bash
           # Define the number of most recent tags to keep
-          KEEP_TAGS=10
+          KEEP_TAGS=5
 
           # Fetch tags from GHCR
-          TAGS=$(curl -s -H "Authorization: Bearer $GHCR_TOKEN" \
-          "https://ghcr.io/v2/${REPOSITORY}/tags/list" | jq -r '.tags[]')
+          TAGS_RESPONSE=$(curl -s -H "Authorization: Bearer $GHCR_TOKEN" \
+          "https://ghcr.io/v2/${REPOSITORY}/tags/list")
+          echo "$TAGS_RESPONSE"
+
+          # Check if the response is null or empty
+          if [ -z "$TAGS_RESPONSE" ] || [ "$TAGS_RESPONSE" = "null" ]; then
+            echo "No tags found or unable to fetch tags."
+            exit 0
+          fi
+
+          # Parse tags
+          TAGS=$(echo "$TAGS_RESPONSE" | jq -r '.tags[]')
 
           # Sort and skip the most recent $KEEP_TAGS
           DELETE_TAGS=$(echo "$TAGS" | grep -v latest | sort -r | tail -n +$((KEEP_TAGS + 1)))
